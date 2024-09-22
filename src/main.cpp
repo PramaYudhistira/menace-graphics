@@ -1,8 +1,8 @@
-#include <glad/glad.h>
+#include "../include/glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-//adjust viewpoert size when window is resized
+//adjust viewport size when window is resized
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -17,9 +17,10 @@ int main()
     }
 
     //hints for the window
-    //sets version of openGL to 3.3, profile to core
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); //major, so 3. something
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //minor, so something .3
+    //sets version of openGL to 4.2
+    //set openGL profile to core profile, bear this in mind if you decide to gitignore include directory
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 
@@ -52,6 +53,16 @@ int main()
     glViewport(0, 0, windowWidth, windowHeight);
 
 
+    //when window is resized, adjust viewport size accordingly using callback function
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    //render loop
+    while(!glfwWindowShouldClose(window)) {
+        glfwSwapBuffers(window);//what is the purpose of this
+        glfwPollEvents();
+    }
+
+    glfwTerminate();//clean up resources
 
     return 0;
 }
