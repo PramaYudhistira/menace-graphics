@@ -8,6 +8,13 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
+void processInput(GLFWwindow* window)
+{
+    //if escape key is pressed, close window, refer to glfw documentation, or the glfw3.h file
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, true);
+    }
+}
 
 int main()
 {
@@ -58,8 +65,19 @@ int main()
 
     //render loop
     while(!glfwWindowShouldClose(window)) {
-        glfwSwapBuffers(window);//what is the purpose of this
+
+        //process input
+        processInput(window);
+
+        //rendering commands
+
+        
+
+        //process events 
         glfwPollEvents();
+
+        //swap buffers, front buffer is displayed, back buffer is being rendered
+        glfwSwapBuffers(window);//computer graphics technique to eliminate flickering
     }
 
     glfwTerminate();//clean up resources
