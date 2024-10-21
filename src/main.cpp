@@ -8,7 +8,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow* window)
+void processInputEscape(GLFWwindow* window)
 {
     //if escape key is pressed, close window, refer to glfw documentation, or the glfw3.h file
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -24,7 +24,7 @@ int main()
     }
 
     //hints for the window
-    //sets version of openGL to 4.2
+    //sets version of openGL to 3.3
     //set openGL profile to core profile, bear this in mind if you decide to gitignore include directory
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
@@ -32,8 +32,8 @@ int main()
 
 
 
-    int windowWidth = 800;
-    int windowHeight = 600;
+    int windowWidth = 1920;
+    int windowHeight = 1080;
 
     
 
@@ -66,12 +66,15 @@ int main()
     //render loop
     while(!glfwWindowShouldClose(window)) {
 
-        //process input
-        processInput(window);
+        //process input 
+        processInputEscape(window);
 
         //rendering commands
-
-        
+        // glClearColor sets the clear color for the color buffer (state-setting function).
+        // glClear clears the color buffer to the clear color set by glClearColor (state-using function).
+        // This prepares the buffer for rendering the next frame.
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);//state setting function
+        glClear(GL_COLOR_BUFFER_BIT);//state using function
 
         //process events 
         glfwPollEvents();

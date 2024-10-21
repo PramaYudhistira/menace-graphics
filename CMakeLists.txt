@@ -10,7 +10,10 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(include)
 
 # Add an executable
-add_executable(${PROJECT_NAME} src/main.cpp src/glad.c)
+add_executable(${PROJECT_NAME}
+	src/main.cpp
+	src/glad.c
+	src/triangle.cpp)
 
 find_package(OpenGL REQUIRED)
 target_link_libraries(${PROJECT_NAME} glfw dl ${OPENGL_gl_LIBRARIES})
