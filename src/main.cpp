@@ -23,19 +23,14 @@ int main()
         return -1;
     }
 
-    //hints for the window
     //sets version of openGL to 3.3
     //set openGL profile to core profile, bear this in mind if you decide to gitignore include directory
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
-
     int windowWidth = 1920;
     int windowHeight = 1080;
-
-    
 
     //Create window
     GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Menace Graphics", NULL, NULL);
@@ -70,9 +65,7 @@ int main()
         processInputEscape(window);
 
         //rendering commands
-        // glClearColor sets the clear color for the color buffer (state-setting function).
-        // glClear clears the color buffer to the clear color set by glClearColor (state-using function).
-        // This prepares the buffer for rendering the next frame.
+        //think state machine, set the state, use the state
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);//state setting function
         glClear(GL_COLOR_BUFFER_BIT);//state using function
 
