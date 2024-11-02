@@ -49,11 +49,8 @@ int main()
         return -1;
     }
 
-    //telling openGL the size of the rendering window, the window which has the context
-    //first 2 arguments represent lower left corner of window, last 2 represent width and height
-    //viewport is the transformation from normalized device coordinates to screen coordinates
+    //set viewport size
     glViewport(0, 0, windowWidth, windowHeight);
-
 
     //when window is resized, adjust viewport size accordingly using callback function
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -66,7 +63,7 @@ int main()
 
         //rendering commands
         //think state machine, set the state, use the state
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);//state setting function
+        glClearColor(0.2f, 0.9f, 0.3f, 1.0f);//state setting function
         glClear(GL_COLOR_BUFFER_BIT);//state using function
 
         //process events 
