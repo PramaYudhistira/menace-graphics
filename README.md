@@ -1,5 +1,6 @@
 <h3> How to Run</h3>
-* CMake
+* Use cmake, not the shell script
+TODO: work on implementing shell script
 
 <h4>Linux</h4>
 

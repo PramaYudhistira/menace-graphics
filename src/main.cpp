@@ -29,16 +29,17 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    int windowWidth = 1920;
-    int windowHeight = 1080;
+    //get window size based on native resolution
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     //Create window
-    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Menace Graphics", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Menace Graphics", NULL, NULL);
     if (!window) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
+
 
     //make window's context current, i.e. use the `window` variable's settings and resources for rendering
     glfwMakeContextCurrent(window);
@@ -50,7 +51,7 @@ int main()
     }
 
     //set viewport size
-    glViewport(0, 0, windowWidth, windowHeight);
+    glViewport(0, 0, mode->width, mode->height);
 
     //when window is resized, adjust viewport size accordingly using callback function
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
