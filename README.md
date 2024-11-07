@@ -14,3 +14,5 @@ TODO: work on implementing shell script
 * run `mkdir build && cd build`, then run `cmake ..`
     * run `make`, this should compile and give the binary for you to run
 
+<h4>TODO: Windows</h4>
+
