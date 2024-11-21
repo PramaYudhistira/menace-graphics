@@ -7,7 +7,7 @@ class Mesh {
     public: 
         Mesh(std::vector<float> vertices, std::size_t size);
         ~Mesh();
-        void draw();
+        void Draw();
 
     private:
         unsigned int VAO_, VBO_;

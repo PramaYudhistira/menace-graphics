@@ -9,6 +9,7 @@ TODO: work on implementing shell script
     * make sure the target gpu is accessible. With nvidia run `nvidia-smi`
     * TODO: cannot figure out this issue, still getting errors with zink driver not finding a gpu to render ```bash MESA: error: ZINK: failed to choose pdev```
         * The executable is running fine so I will ignore the message for now.
+        * this only happens with nvidia gpu bruh...
 
 
 * run `mkdir build && cd build`, then run `cmake ..`
