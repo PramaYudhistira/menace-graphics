@@ -4,11 +4,12 @@
 
 
 //vertex shader
+//TODO: implement shader class to handle shader compilation and linking
 const char* vertexShaderSource = "#version 330 core\n"
                                     "layout (location = 0) in vec3 aPos;\n"
                                     "void main()\n"
                                     "{\n"
-                                    "   gl_Position = vec4(aPos, 1.0);\n"
+                                    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
                                     "}\0";
 
 //fragment shader
@@ -55,9 +56,11 @@ int main()
          0.0f,  0.5f, 0.0f
     };
 
+
+    //--------------------------------------------------SETTING UP BUFFERS----------------------------------------------------------------------
     //think of the name, vertex buffer objects, basically helps you store vertex data in the GPU's memory
     unsigned int VBO;
-    
+
     //basically, creates 1 buffer object, and store this buffer object's ID in the VBO variable
     glGenBuffers(1, &VBO); //BTS: allocates space in the VRAM and returns the ID to reference the space
 
@@ -70,13 +73,42 @@ int main()
     glGenBuffers(3, buffers);
     */
 
-   //bind the buffer we made to the GL_ARRAY_BUFFER target, which is essentially the vertex buffer  
-   glBindBuffer(GL_ARRAY_BUFFER, VBO); //BTS: binds the VBO variable to the GL_ARRAY_BUFFER which is the target
+    //bind the buffer we made to the GL_ARRAY_BUFFER target, which is essentially the vertex buffer  
+    //the first parameter is essentially to optimize VRAM
+    glBindBuffer(GL_ARRAY_BUFFER, VBO); //BTS: binds the VBO variable to the GL_ARRAY_BUFFER which is the target
 
-    //this basically kicks off the pipeline
-   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);  //BTS: Copies vertex data into buffer's memory
+        //this basically kicks off the pipeline (but nothing is drawn yet)
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);  //BTS: Copies vertex data into buffer's memory
 
-   
+    //there is GL_STATIC_DRAW: set once but used many times, so not change after being uploaded
+    //GL_DYNAMIC_DRAW: upload many times but used many times, so changed frequently but updated mostly by CPUs, example is animations
+    //GL_Stream_DRAW: set once and used a few times
+
+    //for example, if we have a buffer and you think data changes all the time we would need
+    //to use GL_DYNAMIC_DRAW, where the GPU will place data in memory that allows for faster writes
+
+    //--------------------------------------------------END OF SETTING UP BUFFERS---------------------------------------------------------------
+
+
+
+
+    //--------------------------------------------------SETTING UP SHADERS----------------------------------------------------------------------
+    /**
+     * note: shaders are written in GLSL, and stored in the VRAM, and are compiled and linked to GPU
+     * I will make a shader class to handle this, for now i write here to visualize graphics pipeline
+     */
+    unsigned int vertexShader;
+
+    //creates a shader in the VRAM, returns the ID of the shader
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+    //places the shader code in the shader object in the VRAM
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+
+    //compiles the shader source code stored in the shader object in the VRAM 
+    glCompileShader(vertexShader);
+
+    glDeleteShader(vertexShader); //delete shader object in VRAM
 
 
 
