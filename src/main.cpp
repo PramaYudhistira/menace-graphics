@@ -41,6 +41,7 @@ int main()
     if (!glfwInit()) {
         return -1;
     }
+    std::cout << "Hello, World!" << std::endl;
 
     //sets version of openGL to 3.3
     //set openGL profile to core profile, bear this in mind if you decide to gitignore include directory
@@ -48,14 +49,12 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
     //TESTING TRIANGLE 
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
          0.0f,  0.5f, 0.0f
     };
-
 
     //--------------------------------------------------SETTING UP BUFFERS----------------------------------------------------------------------
     //think of the name, vertex buffer objects, basically helps you store vertex data in the GPU's memory
@@ -90,13 +89,14 @@ int main()
     //--------------------------------------------------END OF SETTING UP BUFFERS---------------------------------------------------------------
 
 
-
-
     //--------------------------------------------------SETTING UP SHADERS----------------------------------------------------------------------
     /**
      * note: shaders are written in GLSL, and stored in the VRAM, and are compiled and linked to GPU
      * I will make a shader class to handle this, for now i write here to visualize graphics pipeline
-     */
+     
+    */
+
+    //vertex shader
     unsigned int vertexShader;
 
     //creates a shader in the VRAM, returns the ID of the shader
@@ -108,10 +108,46 @@ int main()
     //compiles the shader source code stored in the shader object in the VRAM 
     glCompileShader(vertexShader);
 
-    glDeleteShader(vertexShader); //delete shader object in VRAM
+    //check if the shader compilation was successful
+    int success;
+    char infoLog[512]; 
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR: VERTEX SHADER COMPILATION FAILED\n" << infoLog << std::endl;
+    }
 
+    //fragment shader
+    unsigned int fragmentShader;
 
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+
+    glCompileShader(fragmentShader);
+
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "ERROR: FRAGMENT SHADER COMPILATION FAILED\n" << infoLog << std::endl;
+    }
+
+    //SHADER PROGRAM
+
+    unsigned int shaderProgram;
+    shaderProgram = glCreateProgram();
+
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout << "ERROR: SHADER PROGRAM LINKING FAILED\n" << infoLog << std::endl;
+    }
 
     //get window size based on native resolution
     const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
