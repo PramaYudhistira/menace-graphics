@@ -169,17 +169,35 @@ int main()
     //SHADER PROGRAM
 
     unsigned int shaderProgram;
+
+    //create program, store in VRAM, returns the id of program
     shaderProgram = glCreateProgram();
 
+    //attach shaders to the program 
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
+
+    //link the program
     glLinkProgram(shaderProgram);
+
+    //delete after linking
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
         std::cout << "ERROR: SHADER PROGRAM LINKING FAILED\n" << infoLog << std::endl;
+    } else {
+        std::cout << "SHADER PROGRAM LINKING SUCCESSFUL" << std::endl;
     }
+
+    //the next rendering loop will use this shader program, i.e. shaders on the VRAM
+    glUseProgram(shaderProgram);
+
+    //--------------------------------------------------END OF SETTING UP SHADERS---------------------------------------------------------------
+
+    //--------------------------------------------------SETTING UP VERTEX ATTRIBUTES----------------------------------------------------------------------
 
     //render loop
     while(!glfwWindowShouldClose(window)) {
