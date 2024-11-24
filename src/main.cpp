@@ -37,6 +37,7 @@ void processInputEscape(GLFWwindow* window)
 
 int main()
 {
+    //--------------------------------------------------INITIALIZATION----------------------------------------------------------------------
     //initialize GLFW library
     if (!glfwInit()) {
         return -1;
@@ -49,6 +50,34 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    //get window size based on native resolution
+    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+    //Create window
+    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Menace Graphics", NULL, NULL);
+    if (!window) {
+        std::cout << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    //make window's context current, i.e. use the `window` variable's settings and resources for rendering
+    glfwMakeContextCurrent(window);
+
+    //initialize GLAD
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
+    //set viewport size
+    glViewport(0, 0, mode->width, mode->height);
+
+    //when window is resized, adjust viewport size accordingly using callback function
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    //--------------------------------------------------END OF INITIALIZATION---------------------------------------------------------------
+
     //TESTING TRIANGLE 
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,
@@ -60,8 +89,11 @@ int main()
     //think of the name, vertex buffer objects, basically helps you store vertex data in the GPU's memory
     unsigned int VBO;
 
+    //i bet segfault is here
+    std::cout << "calling genBuffers" << std::endl;
     //basically, creates 1 buffer object, and store this buffer object's ID in the VBO variable
     glGenBuffers(1, &VBO); //BTS: allocates space in the VRAM and returns the ID to reference the space
+    std::cout << "VBO has been initialized and generated: " << VBO << std::endl;
 
     //technically, you can have multiple buffers, and that the VBO variable essentially should be an array of IDs, so if we wanted say, 
     //10 buffers, we would have to create a variable pointer to an array of ids
@@ -148,32 +180,6 @@ int main()
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
         std::cout << "ERROR: SHADER PROGRAM LINKING FAILED\n" << infoLog << std::endl;
     }
-
-    //get window size based on native resolution
-    const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-    //Create window
-    GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Menace Graphics", NULL, NULL);
-    if (!window) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-
-    //make window's context current, i.e. use the `window` variable's settings and resources for rendering
-    glfwMakeContextCurrent(window);
-
-    //initialize GLAD
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
-
-    //set viewport size
-    glViewport(0, 0, mode->width, mode->height);
-
-    //when window is resized, adjust viewport size accordingly using callback function
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     //render loop
     while(!glfwWindowShouldClose(window)) {
