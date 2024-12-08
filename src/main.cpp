@@ -79,47 +79,11 @@ int main()
     //--------------------------------------------------END OF INITIALIZATION---------------------------------------------------------------
 
     //TESTING TRIANGLE 
-    float vertices[] = {
+    GLfloat vertices[] = {
         -0.5f, -0.5f, 0.0f,
          0.5f, -0.5f, 0.0f,
          0.0f,  0.5f, 0.0f
     };
-
-    //--------------------------------------------------SETTING UP BUFFERS----------------------------------------------------------------------
-    //think of the name, vertex buffer objects, basically helps you store vertex data in the GPU's memory
-    unsigned int VBO;
-
-    //i bet segfault is here
-    std::cout << "calling genBuffers" << std::endl;
-    //basically, creates 1 buffer object, and store this buffer object's ID in the VBO variable
-    glGenBuffers(1, &VBO); //BTS: allocates space in the VRAM and returns the ID to reference the space
-    std::cout << "VBO has been initialized and generated: " << VBO << std::endl;
-
-    //technically, you can have multiple buffers, and that the VBO variable essentially should be an array of IDs, so if we wanted say, 
-    //10 buffers, we would have to create a variable pointer to an array of ids
-
-    //for example: 
-    /*
-    unsigned int buffers[3];
-    glGenBuffers(3, buffers);
-    */
-
-    //bind the buffer we made to the GL_ARRAY_BUFFER target, which is essentially the vertex buffer  
-    //the first parameter is essentially to optimize VRAM
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); //BTS: binds the VBO variable to the GL_ARRAY_BUFFER which is the target
-
-        //this basically kicks off the pipeline (but nothing is drawn yet)
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);  //BTS: Copies vertex data into buffer's memory
-
-    //there is GL_STATIC_DRAW: set once but used many times, so not change after being uploaded
-    //GL_DYNAMIC_DRAW: upload many times but used many times, so changed frequently but updated mostly by CPUs, example is animations
-    //GL_Stream_DRAW: set once and used a few times
-
-    //for example, if we have a buffer and you think data changes all the time we would need
-    //to use GL_DYNAMIC_DRAW, where the GPU will place data in memory that allows for faster writes
-
-    //--------------------------------------------------END OF SETTING UP BUFFERS---------------------------------------------------------------
-
 
     //--------------------------------------------------SETTING UP SHADERS----------------------------------------------------------------------
     /**
@@ -128,11 +92,8 @@ int main()
      
     */
 
-    //vertex shader
-    unsigned int vertexShader;
-
     //creates a shader in the VRAM, returns the ID of the shader
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
     //places the shader code in the shader object in the VRAM
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -150,10 +111,8 @@ int main()
         std::cout << "ERROR: VERTEX SHADER COMPILATION FAILED\n" << infoLog << std::endl;
     }
 
-    //fragment shader
-    unsigned int fragmentShader;
-
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    //fragment shader, same routine
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 
@@ -167,11 +126,7 @@ int main()
     }
 
     //SHADER PROGRAM
-
-    unsigned int shaderProgram;
-
-    //create program, store in VRAM, returns the id of program
-    shaderProgram = glCreateProgram();
+    GLuint shaderProgram = glCreateProgram();
 
     //attach shaders to the program 
     glAttachShader(shaderProgram, vertexShader);
@@ -197,7 +152,25 @@ int main()
 
     //--------------------------------------------------END OF SETTING UP SHADERS---------------------------------------------------------------
 
-    //--------------------------------------------------SETTING UP VERTEX ATTRIBUTES----------------------------------------------------------------------
+    //--------------------------------------------------SETTING UP VERTEX ATTRIBUTES AND BUFFERS----------------------------------------------------------------------
+
+    GLuint VBO;
+    GLuint VAO;
+
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); //actually storing the buffer data in the VRAM
+
+    glGenVertexArrays(1, &VAO);
+
+    glBindVertexArray(VAO);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    glEnableVertexAttribArray(0);
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
 
     //render loop
     while(!glfwWindowShouldClose(window)) {
